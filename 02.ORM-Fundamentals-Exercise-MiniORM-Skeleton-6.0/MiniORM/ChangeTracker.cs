@@ -6,7 +6,7 @@ namespace MiniORM
     internal class ChangeTracker<T>
         where T : class, new()
     {
-        public ChangeTracker()
+        public ChangeTracker(IEnumerable<T> entities)
         {
             added = new List<T>();
             removed = new List<T>();

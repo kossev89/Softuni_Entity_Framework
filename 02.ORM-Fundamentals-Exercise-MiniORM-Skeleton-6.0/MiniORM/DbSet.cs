@@ -5,44 +5,68 @@ namespace MiniORM
     public class DbSet<TEntity> : ICollection<TEntity>
         where TEntity : class, new()
     {
-
-        public int Count => throw new NotImplementedException();
-
-        public bool IsReadOnly => throw new NotImplementedException();
-
-        public void Add(TEntity item)
+        internal DbSet(IEnumerable<TEntity> entities) 
         {
-            throw new NotImplementedException();
+            Entities = entities.ToList();
+            ChangeTracker = new ChangeTracker<TEntity>(entities);
+        }
+        internal ChangeTracker<TEntity> ChangeTracker { get; set; }
+        internal IList<TEntity> Entities { get; set; }
+
+        public int Count => Entities.Count();
+
+        public bool IsReadOnly => Entities.IsReadOnly;
+
+        public void Add(TEntity entity)
+        {
+            if (entity==null)
+            {
+                throw new ArgumentNullException("Item cannot be null");
+            }
+            Entities.Add(entity);
+            ChangeTracker.Add(entity);
         }
 
         public void Clear()
         {
-            throw new NotImplementedException();
+            while (Entities.Any())
+            {
+                var entityToRemove = Entities.First();
+                Remove(entityToRemove);
+            }
         }
 
-        public bool Contains(TEntity item)
-        {
-            throw new NotImplementedException();
-        }
+        public bool Contains(TEntity item) => Entities.Contains(item);
 
-        public void CopyTo(TEntity[] array, int arrayIndex)
-        {
-            throw new NotImplementedException();
-        }
 
-        public IEnumerator<TEntity> GetEnumerator()
-        {
-            throw new NotImplementedException();
-        }
+        public void CopyTo(TEntity[] array, int arrayIndex) => Entities.CopyTo(array, arrayIndex);
+
+      
+        
+        public IEnumerator<TEntity> GetEnumerator()=> Entities.GetEnumerator();
 
         public bool Remove(TEntity item)
         {
-            throw new NotImplementedException();
+            if (item==null)
+            {
+                throw new ArgumentNullException("Item cannot be null");
+            }
+            var removedSuccessfully = Entities.Remove(item);
+            if (removedSuccessfully)
+            {
+                ChangeTracker.Remove(item);
+            }
+            return removedSuccessfully;
         }
 
-        IEnumerator IEnumerable.GetEnumerator()
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+
+        public void RemoveRange(IEnumerable<TEntity> entities)
         {
-            throw new NotImplementedException();
+            foreach (var entity in entities.ToArray())
+            {
+                Remove(entity);
+            }
         }
     }
 }
