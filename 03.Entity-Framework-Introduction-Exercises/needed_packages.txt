@@ -1,0 +1,5 @@
+Install-Package Microsoft.EntityFrameworkCore.Tools –v 6.0.1
+Install-Package Microsoft.EntityFrameworkCore.SqlServer –v 6.0.1
+Install-Package Microsoft.EntityFrameworkCore.Design -v 6.0.1
+
+Scaffold-DbContext "Server=DESKTOP-A4Q93F3\SQLEXPRESS;Database=SoftUni;Integrated Security=True; TrustServerCertificate=true" Microsoft.EntityFrameworkCore.SqlServer -o Models -d

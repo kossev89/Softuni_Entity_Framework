@@ -78,10 +78,9 @@ namespace MiniORM
                             throw;
                         }
                     }
+                    transaction.Commit();
                 }
             }
-
-          
         }
     }
 }
