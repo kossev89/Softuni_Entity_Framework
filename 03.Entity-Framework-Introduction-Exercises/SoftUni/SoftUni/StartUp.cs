@@ -1,4 +1,5 @@
-﻿using SoftUni.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using SoftUni.Data;
 using SoftUni.Models;
 
 namespace SoftUni
@@ -7,8 +8,8 @@ namespace SoftUni
     {
         static void Main(string[] args)
         {
-            SoftUniContext softUniContext = new SoftUniContext();
-            Console.WriteLine(Employee.GetEmployeesWithSalaryOver50000(softUniContext)); 
+            SoftUniContext dbContext = new();
+            Console.WriteLine(Employee.GetEmployeesFullInformation(dbContext));
         }
     }
 }
