@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.6.33829.357
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SoftUni", "SoftUni\SoftUni.csproj", "{836EB397-6504-4CC5-8D99-BECA47A7FEE2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SoftUni", "SoftUni\SoftUni.csproj", "{6D7A6D58-7F6F-4537-80C6-4EDA48625290}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,15 +11,15 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{836EB397-6504-4CC5-8D99-BECA47A7FEE2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{836EB397-6504-4CC5-8D99-BECA47A7FEE2}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{836EB397-6504-4CC5-8D99-BECA47A7FEE2}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{836EB397-6504-4CC5-8D99-BECA47A7FEE2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6D7A6D58-7F6F-4537-80C6-4EDA48625290}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6D7A6D58-7F6F-4537-80C6-4EDA48625290}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6D7A6D58-7F6F-4537-80C6-4EDA48625290}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6D7A6D58-7F6F-4537-80C6-4EDA48625290}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {2E3C9884-6F64-45D3-93AE-6B4A4B992EC5}
+		SolutionGuid = {CDB4173C-B042-4A9E-BE9B-719B11447CF8}
 	EndGlobalSection
 EndGlobal
