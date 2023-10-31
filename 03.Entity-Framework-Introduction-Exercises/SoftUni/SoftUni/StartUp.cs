@@ -13,7 +13,7 @@ namespace SoftUni
         static void Main(string[] args)
         {
             SoftUniContext context = new SoftUniContext();
-            Console.WriteLine(DeleteProjectById(context));
+            Console.WriteLine(RemoveTown(context));
         }
 
         public static string GetEmployeesFullInformation(SoftUniContext context)
@@ -331,6 +331,39 @@ namespace SoftUni
                 .ToList();
 
             string result = string.Join(Environment.NewLine, projectsLeft.Select(e => $"{e.Name}"));
+            return result;
+        }
+        public static string RemoveTown(SoftUniContext context)
+        {
+            const string townToBeDeleted = "Seattle";
+
+            var town = context.Towns
+                .Where(n => n.Name == townToBeDeleted)
+                .First();
+
+            var addresses = context.Addresses
+                .Where(t => t.Town == town);
+
+            var employeesInSeatle = context.Employees
+                .Where(t => t.Address.Town == town);
+
+            foreach (var e in employeesInSeatle)
+            {
+                e.AddressId = null;
+            }
+
+            int deletedAddresses = addresses.Count();
+
+            foreach (var a in addresses)
+            {
+                context.Addresses.Remove(a);
+            }
+
+            context.Towns.Remove(town);
+
+            context.SaveChanges();
+
+            string result = $"{deletedAddresses} addresses in {townToBeDeleted} were deleted";
             return result;
         }
     }
