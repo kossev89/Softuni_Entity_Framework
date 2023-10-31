@@ -1,10 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Microsoft.IdentityModel.Tokens;
 using SoftUni.Data;
 using SoftUni.Models;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
+using System.Xml.Linq;
 
 namespace SoftUni
 {
@@ -13,7 +15,7 @@ namespace SoftUni
         static void Main(string[] args)
         {
             SoftUniContext context = new SoftUniContext();
-            Console.WriteLine(GetEmployeesFromResearchAndDevelopment(context));
+            Console.WriteLine(GetEmployeesInPeriod(context));
         }
 
         public static string GetEmployeesFullInformation(SoftUniContext context)
@@ -94,43 +96,41 @@ namespace SoftUni
                     managerLastName = e.Manager.LastName,
                     e.EmployeeId
                 })
-                .Take(10)
-                .ToArray();
+                .Take(10);
 
-            var projects = context.Projects
-                .Select(p => new
-                {
-                    p.Name,
-                    p.StartDate,
-                    p.EndDate,
-                    p.EmployeesProjects
-                })
-                .ToArray();
+            var projects = context.EmployeesProjects
+            .Select(e=>new
+            {
+                e.Project.StartDate,
+                e.Project.EndDate,
+                e.Project.Name,
+                e.EmployeeID
+            })
+            .ToList();
 
-            var sb = new StringBuilder();
+            var output = new StringBuilder();
 
             foreach (var e in employees)
             {
-                sb.AppendLine($"{e.employeeFirstName} {e.employeeLastName} - Manager: {e.managerFirstName} {e.managerLastName}");
-                var projectsOfEmployee = projects
-                    .Where(x => x.EmployeesProjects.Where(y => y.EmployeeID == e.EmployeeId).Any())
-                    .ToArray();
-                if (projectsOfEmployee.Any(x => x.StartDate.Year >= 2001 && x.StartDate.Year <= 2003))
+                output.AppendLine($"{e.employeeFirstName} {e.employeeLastName} - Manager: {e.managerFirstName} {e.managerLastName}");
+                foreach (var p in projects.Where(p=>p.EmployeeID == e.EmployeeId))
                 {
-                    foreach (var p in projectsOfEmployee.Where(x => x.StartDate.Year >= 2001 && x.StartDate.Year <= 2003))
+                    if (p.StartDate.Year >= 2001 && p.StartDate.Year <= 2003)
                     {
                         if (p.EndDate != null)
                         {
-                            sb.AppendLine($"--{p.Name} - {p.StartDate.ToString("M/d/yyyy h:mm:ss tt")} - {p.EndDate?.ToString("M/d/yyyy h:mm:ss tt")}");
+                            output.AppendLine($"--{p.Name} - {p.StartDate.ToString("M/d/yyyy h:mm:ss tt")} - {p.EndDate?.ToString("M/d/yyyy h:mm:ss tt")}");
                         }
                         else
                         {
-                            sb.AppendLine($"--{p.Name} - {p.StartDate.ToString("M/d/yyyy h:mm:ss tt")} - not finished");
+                            output.AppendLine($"--{p.Name} - {p.StartDate.ToString("M/d/yyyy h:mm:ss tt")} - not finished");
                         }
                     }
                 }
             }
-            return sb.ToString().Trim();
+            return output.ToString().Trim();
+
+
         }
         public static string GetAddressesByTown(SoftUniContext context)
         {
