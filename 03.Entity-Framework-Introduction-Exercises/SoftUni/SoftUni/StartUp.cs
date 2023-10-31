@@ -1,6 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using Microsoft.IdentityModel.Tokens;
 using SoftUni.Data;
 using SoftUni.Models;
+using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 
 namespace SoftUni
@@ -10,7 +13,7 @@ namespace SoftUni
         static void Main(string[] args)
         {
             SoftUniContext context = new SoftUniContext();
-            Console.WriteLine(IncreaseSalaries(context));
+            Console.WriteLine(DeleteProjectById(context));
         }
 
         public static string GetEmployeesFullInformation(SoftUniContext context)
@@ -43,7 +46,6 @@ namespace SoftUni
             }
             return sb.ToString().Trim();
         }
-
         public static string GetEmployeesFromResearchAndDevelopment(SoftUniContext context)
         {
             var employees = context.Employees
@@ -68,7 +70,6 @@ namespace SoftUni
 
             return output.ToString().Trim();
         }
-
         public static string AddNewAddressToEmployee(SoftUniContext context)
         {
             var address = new Address { AddressText = "Vitoshka 15", TownId = 4 };
@@ -88,7 +89,6 @@ namespace SoftUni
             var result = string.Join(Environment.NewLine, employees).ToString();
             return result;
         }
-
         public static string GetEmployeesInPeriod(SoftUniContext context)
         {
             var employees = context.Employees
@@ -138,7 +138,6 @@ namespace SoftUni
             }
             return sb.ToString().Trim();
         }
-
         public static string GetAddressesByTown(SoftUniContext context)
         {
             var addresses = context.Addresses
@@ -163,7 +162,6 @@ namespace SoftUni
 
             return output.ToString().Trim();
         }
-
         public static string GetEmployee147(SoftUniContext context)
         {
             var employee147 = context.Employees
@@ -197,7 +195,6 @@ namespace SoftUni
 
             return sb.ToString().Trim();
         }
-
         public static string GetDepartmentsWithMoreThan5Employees(SoftUniContext context)
         {
             var departments = context.Departments
@@ -238,7 +235,6 @@ namespace SoftUni
             }
             return sb.ToString().Trim();
         }
-
         public static string GetLatestProjects(SoftUniContext context)
         {
             var projects = context.Projects
@@ -268,7 +264,6 @@ namespace SoftUni
 
             return sb.ToString().Trim();
         }
-
         public static string IncreaseSalaries(SoftUniContext context)
         {
             var empl = context.Employees
@@ -276,8 +271,8 @@ namespace SoftUni
                 || e.Department.Name == "Tool Design"
                 || e.Department.Name == "Marketing"
                 || e.Department.Name == "Information Services")
-                .OrderBy(f=>f.FirstName)
-                .ThenBy(l=>l.LastName)
+                .OrderBy(f => f.FirstName)
+                .ThenBy(l => l.LastName)
                 .ToList();
 
             foreach (var e in empl)
@@ -290,6 +285,53 @@ namespace SoftUni
             string result = string.Join(Environment.NewLine, empl.Select(e => $"{e.FirstName} {e.LastName} (${e.Salary:f2})"));
             return result;
 
+        }
+        public static string GetEmployeesByFirstNameStartingWithSa(SoftUniContext context)
+        {
+            const string StartWith = "Sa";
+            var employees = context.Employees
+                .Select(e => new
+                {
+                    e.FirstName,
+                    e.LastName,
+                    e.JobTitle,
+                    e.Salary
+                })
+                .Where(n => n.FirstName.StartsWith(StartWith))
+                .OrderBy(f => f.FirstName)
+                .ThenBy(l => l.LastName)
+                .ToList();
+
+            string result = string.Join(Environment.NewLine, employees.Select(e => $"{e.FirstName} {e.LastName} - {e.JobTitle} - (${e.Salary:f2})"));
+            return result;
+        }
+        public static string DeleteProjectById(SoftUniContext context)
+        {
+            const int IdToBeDeleted = 2;
+            var projects = context.Projects.Find(IdToBeDeleted);
+
+            var employeesWithProjects = context.EmployeesProjects
+                .Where(e => e.ProjectID == IdToBeDeleted)
+                .ToList();
+
+            foreach (var e in employeesWithProjects)
+            {
+                context.EmployeesProjects.Remove(e);
+            }
+
+            context.Projects.Remove(projects);
+            context.SaveChanges();
+
+            var projectsLeft = context.Projects
+                .Select(e => new
+                {
+                    e.Name
+                })
+                .Take(10)
+                .ToList();
+
+            string result = string.Join(Environment.NewLine, projectsLeft.Select(e => $"{e.Name}"));
+            return result;
         }
     }
 }
