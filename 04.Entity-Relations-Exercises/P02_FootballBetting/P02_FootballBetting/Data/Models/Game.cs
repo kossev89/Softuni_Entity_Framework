@@ -53,7 +53,7 @@ namespace P02_FootballBetting.Data.Models
 
         [Required]
         public Result Result { get; set; }
-        public ICollection<Player> PlayersStatistics { get; set; }
+        public ICollection<PlayerStatistic> PlayersStatistics { get; set; }
         public ICollection<Bet> Bets { get; set; }
 
     }

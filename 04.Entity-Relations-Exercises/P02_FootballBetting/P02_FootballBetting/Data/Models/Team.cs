@@ -18,18 +18,18 @@ namespace P02_FootballBetting.Data.Models
         [Key]
         public int TeamId { get; set; }
 
-        [Required, StringLength(100)]
+        [Required]
         public string Name { get; set; } = null!;
 
-        [StringLength(1000)]
+        [Required]
         public string LogoUrl { get; set; } = null!;
 
-        [StringLength(3, MinimumLength = 3)]
+        [Required]
         public string Initials { get; set; } = null!;
-
+        [Required]
         public decimal Budget { get; set; }
 
-        [ForeignKey(nameof(PrimaryKitColor))]
+        [ForeignKey(nameof(PrimaryKitColor)),Required]
         public int PrimaryKitColorId { get; set; }
         public virtual Color PrimaryKitColor { get; set; }
 

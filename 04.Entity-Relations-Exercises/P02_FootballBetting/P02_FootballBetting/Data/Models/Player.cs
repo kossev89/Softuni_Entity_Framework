@@ -35,7 +35,7 @@ namespace P02_FootballBetting.Data.Models
         [Required]
         public bool IsInjured { get; set; }
 
-        public ICollection<Game> PlayersStatistics { get; set; }
+        public ICollection<PlayerStatistic> PlayersStatistics { get; set; }
 
     }
 }
