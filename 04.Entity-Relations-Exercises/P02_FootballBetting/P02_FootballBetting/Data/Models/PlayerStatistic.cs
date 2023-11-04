@@ -11,10 +11,16 @@ namespace P02_FootballBetting.Data.Models
 {
     public class PlayerStatistic
     {
-        [Key]
-        public int GameId { get; set; }
+        public PlayerStatistic()
+        {
 
-        [ForeignKey(nameof(PlayerId)),Required]
+        }
+
+        [ForeignKey(nameof(Game))]
+        public int GameId { get; set; }
+        public Game Game { get; set; }
+
+        [ForeignKey(nameof(Player)),Required]
         public int PlayerId { get; set; }
         public Player Player { get; set; }
 

@@ -23,10 +23,10 @@ namespace P02_FootballBetting.Data.Models
         public Result Prediction { get; set; }
         [Required]
         public DateTime DateTime { get; set; }
-        [ForeignKey(nameof(UserId)), Required]
+        [ForeignKey(nameof(User)), Required]
         public int UserId { get; set; }
         public User User { get; set; }
-        [ForeignKey(nameof(GameId)), Required]
+        [ForeignKey(nameof(Game)), Required]
         public int GameId { get; set; }
         public Game Game { get; set; }
     }

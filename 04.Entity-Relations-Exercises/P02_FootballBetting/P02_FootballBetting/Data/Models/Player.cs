@@ -12,7 +12,7 @@ namespace P02_FootballBetting.Data.Models
     {
         public Player()
         {
-            IsInjured = false;
+
         }
 
         [Key]
@@ -24,16 +24,18 @@ namespace P02_FootballBetting.Data.Models
         [Required]
         public int SquadNumber { get; set; }
 
-        [ForeignKey(nameof(TeamId)), Required]
+        [ForeignKey(nameof(Team)), Required]
         public int TeamId { get; set; }
         public Team Team { get; set; }
 
-        [ForeignKey(nameof(PositionId)), Required]
+        [ForeignKey(nameof(Position)), Required]
         public int PositionId { get; set; }
         public Position Position { get; set; }
 
         [Required]
         public bool IsInjured { get; set; }
+
+        public ICollection<Game> PlayersStatistics { get; set; }
 
     }
 }

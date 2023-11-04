@@ -10,14 +10,20 @@ namespace P02_FootballBetting.Data.Models
 {
     public class Town
     {
+        public Town()
+        {
+
+        }
+
         [Key]
         public int TownId { get; set; }
 
         [StringLength(100), Required]
         public string Name { get; set; } = null!;
 
-        [ForeignKey(nameof(CountryId)), Required]
+        [ForeignKey(nameof(Country)), Required]
         public int CountryId { get; set; }
         public Country Country { get; set; }
+        public ICollection<Team> Teams { get; set; }
     }
 }
