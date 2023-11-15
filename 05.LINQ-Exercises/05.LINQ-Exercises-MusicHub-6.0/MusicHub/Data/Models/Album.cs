@@ -12,7 +12,7 @@ namespace MusicHub.Data.Models
     {
         public Album()
         {
-            Price = Songs.Sum(x => x.Price);
+      
         }
         [Key]
         public int Id { get; set; }
@@ -20,7 +20,7 @@ namespace MusicHub.Data.Models
         public string Name { get; set; }
         [Required]
         public DateTime ReleaseDate { get; set; }
-        public decimal Price { get; set; }
+        public decimal Price => this.Songs.Sum(x => x.Price);
         [ForeignKey ("Producer"), Required]
         public int? ProducerId { get; set; }
         public Producer Producer { get; set; }
