@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -12,10 +13,10 @@ namespace P01_StudentSystem.Data
     public partial class StudentSystemContext : DbContext
     {
         public StudentSystemContext()
-        { 
+        {
         }
         public StudentSystemContext(DbContextOptions<StudentSystemContext> options)
-            :base(options)
+            : base(options)
         {
 
         }
@@ -28,6 +29,11 @@ namespace P01_StudentSystem.Data
             mb.Entity<Student>()
                 .Property(s => s.PhoneNumber)
                 .IsUnicode(false);
+
+            mb.Entity<Student>()
+                .Property(b => b.Birthday)
+                .IsRequired(false);
+
 
             mb.Entity<Resource>()
                 .Property(r => r.Url)
@@ -44,14 +50,14 @@ namespace P01_StudentSystem.Data
         public virtual DbSet<Homework> Homeworks { get; set; } = null!;
         public virtual DbSet<StudentCourse> StudentsCourses { get; set; } = null!;
 
-//        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-//        {
-//            if (!optionsBuilder.IsConfigured)
-//            {
-//#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-//                optionsBuilder.UseSqlServer("Server=DESKTOP-A4Q93F3\\SQLEXPRESS;Database=StudentSystem;Integrated Security=True; TrustServerCertificate=true");
-//            }
-//        }
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            if (!optionsBuilder.IsConfigured)
+            {
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+                optionsBuilder.UseSqlServer("Server=DESKTOP-A4Q93F3\\SQLEXPRESS;Database=StudentSystem;Integrated Security=True; TrustServerCertificate=true");
+            }
+        }
 
 
     }

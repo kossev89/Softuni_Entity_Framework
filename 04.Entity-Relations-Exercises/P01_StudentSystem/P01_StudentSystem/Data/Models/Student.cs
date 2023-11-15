@@ -13,8 +13,6 @@ namespace P01_StudentSystem.Data.Models
     {
         public Student()
         {
-            Courses = new HashSet<Course>();
-            Homeworks = new HashSet<Homework>();
         }
 
         [Key]
@@ -32,8 +30,7 @@ namespace P01_StudentSystem.Data.Models
 
         public DateTime? Birthday  { get; set; }
 
-        public ICollection<Course> Courses { get; set; }
         public ICollection<Homework> Homeworks { get; set; }
-        public List<StudentCourse> StudentsCourses { get; set; }
+        public ICollection<StudentCourse> StudentsCourses { get; set; }
     }
 }
