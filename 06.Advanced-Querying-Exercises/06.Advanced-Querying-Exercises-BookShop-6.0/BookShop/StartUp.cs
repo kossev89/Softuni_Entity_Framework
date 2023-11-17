@@ -14,7 +14,7 @@
         {
             using var db = new BookShopContext();
             DbInitializer.ResetDatabase(db);
-            Console.WriteLine(GetTotalProfitByCategory(db));
+            Console.WriteLine(GetMostRecentBooks(db));
         }
 
         public static string GetBooksByAgeRestriction(BookShopContext context, string command)
@@ -241,6 +241,29 @@
                 result.AppendLine($"{c.Name} ${c.TotalProfit:f2}");
             }
             return result.ToString().Trim();
+        }
+        public static string GetMostRecentBooks(BookShopContext context)
+        {
+            var categories = context.Categories
+                .Select(e => new
+                {
+                    e.Name,
+                    NewestBooks = e.CategoryBooks.OrderByDescending(x => x.Book.ReleaseDate).Take(3).ToArray()
+                })
+                .OrderBy(x=>x.Name)
+                .ToArray();
+
+            StringBuilder sb = new();
+            foreach (var c in categories)
+            {
+                sb.AppendLine($"--{c.Name}");
+                foreach (var b in c.NewestBooks)
+                {
+                    sb.AppendLine($"{b.Book.Title} ({b.Book.ReleaseDate.Value.Year})");
+                }
+            }
+
+            return sb.ToString().Trim();
         }
     }
 }
