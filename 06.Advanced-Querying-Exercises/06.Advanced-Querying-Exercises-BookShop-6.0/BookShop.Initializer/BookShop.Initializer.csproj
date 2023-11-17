@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Z.EntityFramework.Plus.EFCore" Version="6.101.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\BookShop.Data\BookShop.Data.csproj" />
     <ProjectReference Include="..\BookShop.Models\BookShop.Models.csproj" />
   </ItemGroup>

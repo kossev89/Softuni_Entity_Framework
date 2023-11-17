@@ -7,6 +7,7 @@
     using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
     using System.Diagnostics.CodeAnalysis;
     using System.Text;
+    using Z.EntityFramework.Plus;
 
     public class StartUp
     {
@@ -14,7 +15,7 @@
         {
             using var db = new BookShopContext();
             DbInitializer.ResetDatabase(db);
-            Console.WriteLine(GetMostRecentBooks(db));
+            IncreasePrices(db);
         }
 
         public static string GetBooksByAgeRestriction(BookShopContext context, string command)
@@ -264,6 +265,13 @@
             }
 
             return sb.ToString().Trim();
+        }
+        public static void IncreasePrices(BookShopContext context)
+        {
+            context.Books
+                .Where(r => r.ReleaseDate.Value.Year < 2010)
+                .UpdateAsync(x => new Book() { Price = x.Price+5});
+            context.SaveChanges();
         }
     }
 }
