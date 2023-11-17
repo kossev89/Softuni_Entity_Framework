@@ -14,8 +14,7 @@
         {
             using var db = new BookShopContext();
             DbInitializer.ResetDatabase(db);
-            int input = int.Parse(Console.ReadLine());
-            Console.WriteLine($"There are {CountBooks(db, input)} books with longer title than {input} symbols");
+            Console.WriteLine(CountCopiesByAuthor(db));
         }
 
         public static string GetBooksByAgeRestriction(BookShopContext context, string command)
@@ -106,7 +105,7 @@
         {
             string[] catagories = input
                 .Split(' ', StringSplitOptions.RemoveEmptyEntries)
-                .Select(c=>c.ToLower())
+                .Select(c => c.ToLower())
                 .ToArray();
 
             var books = context.Books
@@ -120,7 +119,7 @@
 
             string result = string.Join(Environment.NewLine, books.Select(e => e.Title));
             return result;
-                
+
         }
         public static string GetBooksReleasedBefore(BookShopContext context, string date)
         {
@@ -199,11 +198,30 @@
         public static int CountBooks(BookShopContext context, int lengthCheck)
         {
             var books = context.Books
-                .Where(t=> t.Title.Length>lengthCheck)
+                .Where(t => t.Title.Length > lengthCheck)
                 .ToArray();
 
             int booksCount = books.Count();
             return booksCount;
+        }
+        public static string CountCopiesByAuthor(BookShopContext context)
+        {
+            var authors = context.Authors
+                .Select(e=> new
+                {
+                    AuthorName = string.Join(' ', e.FirstName, e.LastName),
+                    CopiesCount = e.Books.Sum(s=>s.Copies)
+                })
+                .OrderByDescending(o=>o.CopiesCount)
+                .ToArray();
+
+            StringBuilder result = new();
+
+            foreach (var a in authors)
+            {
+                result.AppendLine($"{a.AuthorName} - {a.CopiesCount}");
+            }
+            return result.ToString().Trim();
         }
     }
 }
