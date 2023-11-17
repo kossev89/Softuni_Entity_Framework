@@ -15,7 +15,7 @@
         {
             using var db = new BookShopContext();
             DbInitializer.ResetDatabase(db);
-            IncreasePrices(db);
+            Console.WriteLine(RemoveBooks(db));
         }
 
         public static string GetBooksByAgeRestriction(BookShopContext context, string command)
@@ -272,6 +272,20 @@
                 .Where(r => r.ReleaseDate.Value.Year < 2010)
                 .UpdateAsync(x => new Book() { Price = x.Price+5});
             context.SaveChanges();
+        }
+        public static int RemoveBooks(BookShopContext context)
+        {
+            var booksToDelete = context.Books
+                .Where(c => c.Copies < 4200);
+
+            int count = booksToDelete.Count();
+
+            context.Books
+                .Where(c => c.Copies < 4200)
+                .Delete();
+            context.SaveChanges();
+
+            return count;
         }
     }
 }
