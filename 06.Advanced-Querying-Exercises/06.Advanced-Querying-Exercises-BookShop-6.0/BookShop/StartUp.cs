@@ -4,8 +4,10 @@
     using BookShop.Models.Enums;
     using Data;
     using Initializer;
+    using Microsoft.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
     using System.Diagnostics.CodeAnalysis;
+    using System.Globalization;
     using System.Text;
     using Z.EntityFramework.Plus;
 
@@ -15,7 +17,7 @@
         {
             using var db = new BookShopContext();
             DbInitializer.ResetDatabase(db);
-            Console.WriteLine(RemoveBooks(db));
+            Console.WriteLine(GetMostRecentBooks(db));
         }
 
         public static string GetBooksByAgeRestriction(BookShopContext context, string command)
@@ -124,7 +126,7 @@
         }
         public static string GetBooksReleasedBefore(BookShopContext context, string date)
         {
-            DateTime.TryParse(date, out DateTime beforeDate);
+            var beforeDate = DateTime.ParseExact(date, "dd-MM-yyyy", CultureInfo.InvariantCulture);
 
             var books = context.Books
                 .Where(rd => rd.ReleaseDate < beforeDate)
@@ -249,10 +251,15 @@
                 .Select(e => new
                 {
                     e.Name,
-                    NewestBooks = e.CategoryBooks.OrderByDescending(x => x.Book.ReleaseDate).Take(3).ToArray()
+                    NewestBooks = e.CategoryBooks.OrderByDescending(x => x.Book.ReleaseDate).Take(3)
+                    .Select(s => new
+                    {
+                        s.Book.Title,
+                        s.Book.ReleaseDate.Value.Year
+                    })
                 })
-                .OrderBy(x=>x.Name)
-                .ToArray();
+                .OrderBy(x => x.Name);
+
 
             StringBuilder sb = new();
             foreach (var c in categories)
@@ -260,7 +267,7 @@
                 sb.AppendLine($"--{c.Name}");
                 foreach (var b in c.NewestBooks)
                 {
-                    sb.AppendLine($"{b.Book.Title} ({b.Book.ReleaseDate.Value.Year})");
+                    sb.AppendLine($"{b.Title} ({b.Year})");
                 }
             }
 
