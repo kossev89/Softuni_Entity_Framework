@@ -12,8 +12,15 @@ namespace ProductShop
         {
 
             ProductShopContext context = new ProductShopContext();
-            string usersJson = File.ReadAllText(@"..\..\..\Datasets\users.json");
-            Console.WriteLine(ImportUsers(context, usersJson));
+            //string usersJson = File.ReadAllText(@"..\..\..\Datasets\users.json");
+            //Console.WriteLine(ImportUsers(context, usersJson));
+            //string productsJson = File.ReadAllText(@"..\..\..\Datasets\products.json");
+            //Console.WriteLine(ImportProducts(context, productsJson));
+            //string categoriesJson = File.ReadAllText(@"..\..\..\Datasets\categories.json");
+            //Console.WriteLine(ImportCategories(context, categoriesJson));
+            string categoriesProductsJson = File.ReadAllText(@"..\..\..\Datasets\categories-products.json");
+            Console.WriteLine(ImportCategoryProducts(context, categoriesProductsJson));
+
         }
 
         public static string ImportUsers(ProductShopContext context, string inputJson)
@@ -22,6 +29,33 @@ namespace ProductShop
             context.Users.AddRange(users);
             context.SaveChanges();
             return $"Successfully imported {users.Length}";
+        }
+        public static string ImportProducts(ProductShopContext context, string inputJson)
+        {
+           
+            Product[] products = JsonConvert.DeserializeObject<Product[]>(inputJson);
+
+            context.Products.AddRange(products);
+            context.SaveChanges();
+            return $"Successfully imported {products.Length}";
+        }
+        public static string ImportCategories(ProductShopContext context, string inputJson)
+        {
+            List<Category> categories = JsonConvert.DeserializeObject<List<Category>>(inputJson)
+                .Where(x => x.Name != null)
+                .ToList();
+
+            context.Categories.AddRange(categories);
+            context.SaveChanges();
+            return $"Successfully imported {categories.Count}";
+        }
+        public static string ImportCategoryProducts(ProductShopContext context, string inputJson)
+        {
+            CategoryProduct[] categoriesProducts = JsonConvert.DeserializeObject<CategoryProduct[]>(inputJson);
+
+            context.CategoriesProducts.AddRange(categoriesProducts);
+            context.SaveChanges();
+            return $"Successfully imported {categoriesProducts.Length}";
         }
     }
 }
