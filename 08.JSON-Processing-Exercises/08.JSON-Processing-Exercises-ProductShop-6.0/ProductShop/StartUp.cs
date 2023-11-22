@@ -18,8 +18,9 @@ namespace ProductShop
             //Console.WriteLine(ImportProducts(context, productsJson));
             //string categoriesJson = File.ReadAllText(@"..\..\..\Datasets\categories.json");
             //Console.WriteLine(ImportCategories(context, categoriesJson));
-            string categoriesProductsJson = File.ReadAllText(@"..\..\..\Datasets\categories-products.json");
-            Console.WriteLine(ImportCategoryProducts(context, categoriesProductsJson));
+            //string categoriesProductsJson = File.ReadAllText(@"..\..\..\Datasets\categories-products.json");
+            //Console.WriteLine(ImportCategoryProducts(context, categoriesProductsJson));
+            Console.WriteLine(  GetProductsInRange(context));
 
         }
 
@@ -32,7 +33,7 @@ namespace ProductShop
         }
         public static string ImportProducts(ProductShopContext context, string inputJson)
         {
-           
+
             Product[] products = JsonConvert.DeserializeObject<Product[]>(inputJson);
 
             context.Products.AddRange(products);
@@ -56,6 +57,22 @@ namespace ProductShop
             context.CategoriesProducts.AddRange(categoriesProducts);
             context.SaveChanges();
             return $"Successfully imported {categoriesProducts.Length}";
+        }
+        public static string GetProductsInRange(ProductShopContext context)
+        {
+            var products = context.Products
+                .Where(p => p.Price >= 500 && p.Price <= 1000)
+                .Select(e => new
+                {
+                    name = e.Name,
+                    price=e.Price,
+                    seller = string.Join(' ', e.Seller.FirstName, e.Seller.LastName)
+                })
+                .OrderBy(p => p.price)
+                .ToArray();
+
+            string productsJson = JsonConvert.SerializeObject(products, Formatting.Indented);
+            return productsJson;
         }
     }
 }
