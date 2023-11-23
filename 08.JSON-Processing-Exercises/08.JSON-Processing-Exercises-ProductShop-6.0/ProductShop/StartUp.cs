@@ -12,16 +12,16 @@ namespace ProductShop
         {
 
             ProductShopContext context = new ProductShopContext();
-            //string usersJson = File.ReadAllText(@"..\..\..\Datasets\users.json");
-            //Console.WriteLine(ImportUsers(context, usersJson));
-            //string productsJson = File.ReadAllText(@"..\..\..\Datasets\products.json");
-            //Console.WriteLine(ImportProducts(context, productsJson));
-            //string categoriesJson = File.ReadAllText(@"..\..\..\Datasets\categories.json");
-            //Console.WriteLine(ImportCategories(context, categoriesJson));
-            //string categoriesProductsJson = File.ReadAllText(@"..\..\..\Datasets\categories-products.json");
-            //Console.WriteLine(ImportCategoryProducts(context, categoriesProductsJson));
-            Console.WriteLine(  GetProductsInRange(context));
-
+            string usersJson = File.ReadAllText(@"..\..\..\Datasets\users.json");
+            Console.WriteLine(ImportUsers(context, usersJson));
+            string productsJson = File.ReadAllText(@"..\..\..\Datasets\products.json");
+            Console.WriteLine(ImportProducts(context, productsJson));
+            string categoriesJson = File.ReadAllText(@"..\..\..\Datasets\categories.json");
+            Console.WriteLine(ImportCategories(context, categoriesJson));
+            string categoriesProductsJson = File.ReadAllText(@"..\..\..\Datasets\categories-products.json");
+            Console.WriteLine(ImportCategoryProducts(context, categoriesProductsJson));
+            Console.WriteLine(GetProductsInRange(context));
+            Console.WriteLine(GetSoldProducts(context));
         }
 
         public static string ImportUsers(ProductShopContext context, string inputJson)
@@ -73,6 +73,30 @@ namespace ProductShop
 
             string productsJson = JsonConvert.SerializeObject(products, Formatting.Indented);
             return productsJson;
+        }
+        public static string GetSoldProducts(ProductShopContext context)
+        {
+            var users = context.Users
+                .Select(e => new
+                {
+                    firstName = e.FirstName,
+                    lastName = e.LastName,
+                    soldProducts = e.ProductsSold.Where(p => p.BuyerId != null)
+                    .Select(p => new
+                    {
+                        name = p.Name,
+                        price = p.Price,
+                        buyerFirstName = p.Buyer.FirstName,
+                        buyerLastName = p.Buyer.LastName
+                    })
+                })
+                .OrderBy(l=>l.lastName)
+                .ThenBy(f=>f.firstName)
+                .ToArray();
+
+            string usersJson = JsonConvert.SerializeObject(users, Formatting.Indented);
+            return usersJson;
+
         }
     }
 }
