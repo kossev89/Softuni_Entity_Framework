@@ -131,7 +131,14 @@
                     output.AppendLine(ErrorMessage);
                     continue;
                 }
-                ICollection<Client> validClients = new HashSet<Client>();
+
+                Product product = new()
+                {
+                    Name = p.Name,
+                    Price = p.Price,
+                    CategoryType = (CategoryType)p.CategoryType,
+                };
+
                 var allClients = context.Clients
                     .ToArray();
 
@@ -143,17 +150,14 @@
                         output.AppendLine(ErrorMessage);
                         continue;
                     }
-                    validClients.Add(client);
+                    product.ProductsClients.Add(new ProductClient()
+                    {
+                        Client = client
+                    }) ;
                 }
-                Product product = new()
-                {
-                    Name = p.Name,
-                    Price = p.Price,
-                    CategoryType = (CategoryType)p.CategoryType,
-                };
 
                 validProducts.Add(product);
-                output.AppendLine(string.Format(SuccessfullyImportedProducts, product.Name, validClients.Count()));
+                output.AppendLine(string.Format(SuccessfullyImportedProducts, product.Name, product.ProductsClients.Count()));
             }
             context.Products.AddRange(validProducts);
             context.SaveChanges();

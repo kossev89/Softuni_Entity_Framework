@@ -13,11 +13,11 @@ namespace Invoices.Data.Models
         [Key]
         public int Id { get; set; }
         [Required, StringLength(30, MinimumLength = 9)]
-        public string? Name { get; set; }
+        public string Name { get; set; } = null!;
         [Required]
-        public decimal? Price { get; set; }
+        public decimal Price { get; set; }
         [Required]
-        public CategoryType? CategoryType { get; set; }
+        public CategoryType CategoryType { get; set; }
         public ICollection<ProductClient> ProductsClients { get; set; }= new List<ProductClient>();
     }
 }

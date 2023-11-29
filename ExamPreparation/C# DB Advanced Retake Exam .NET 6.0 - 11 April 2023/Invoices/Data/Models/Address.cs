@@ -14,17 +14,18 @@ namespace Invoices.Data.Models
         [Key]
         public int Id { get; set; }
         [Required, StringLength(20, MinimumLength = 10)]
-        public string? StreetName { get; set; }
+        public string StreetName { get; set; } = null!;
         [Required]
-        public int? StreetNumber { get; set; }
+        public int StreetNumber { get; set; }
         [Required]
-        public string? PostCode { get; set; }
+        public string PostCode { get; set; } = null!;
         [Required, StringLength(15, MinimumLength = 5)]
-        public string? City { get; set; }
+        public string City { get; set; } = null!;
         [Required, StringLength(15, MinimumLength = 5)]
-        public string? Country { get; set; }
+        public string Country { get; set; } = null!;
+        [Required]
         public int ClientId { get; set; }
-        [ForeignKey(nameof(ClientId)), Required]
-        public Client Client { get; set; }
+        [ForeignKey(nameof(ClientId))]
+        public Client Client { get; set; } = null!;
     }
 }
