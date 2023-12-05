@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml;
 using System.Xml.Serialization;
 
 namespace Medicines.Utilities
@@ -28,12 +29,22 @@ namespace Medicines.Utilities
             XmlSerializerNamespaces ns = new XmlSerializerNamespaces();
             ns.Add("", "");
 
-            using (StringWriter writer = new StringWriter())
+            XmlWriterSettings settings = new();
+            settings.OmitXmlDeclaration = true;
+            settings.IndentChars = "\t";
+            settings.Indent = true;
+
+            StringWriter stringWriter = new();
+
+
+            using (XmlWriter writer = XmlWriter.Create(stringWriter, settings))
             {
                 xmlSerializer.Serialize(writer, objectToSerialize, ns);
 
                 return writer.ToString();
             }
+
+
 
         }
     }
