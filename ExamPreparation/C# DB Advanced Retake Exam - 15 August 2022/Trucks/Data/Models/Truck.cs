@@ -1,4 +1,7 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -14,13 +17,15 @@ namespace Trucks.Data.Models
         [Key]
         public int Id { get; set; }
         [StringLength(8)]
-        public string? RegistrationNumber { get; set; }
+        [Required]
+        public string RegistrationNumber { get; set; } = null!;
         [Required]
         [StringLength(17)]
         public string VinNumber { get; set; } = null!;
         public int? TankCapacity { get; set; }
         public int? CargoCapacity { get; set; }
         [Required]
+        [JsonConverter(typeof(StringEnumConverter))]
         public CategoryType CategoryType { get; set; }
         [Required]
         public MakeType MakeType { get; set; }
