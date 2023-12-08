@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Footballers.Shared;
 using System.ComponentModel.DataAnnotations.Schema;
+using Newtonsoft.Json;
 
 namespace Footballers.Data.Models
 {
